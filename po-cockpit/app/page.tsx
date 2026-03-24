@@ -65,6 +65,7 @@ export default function Home() {
           onToggleToday={board.toggleToday}
           onDelete={board.deleteTask}
           onOpenFinalApproach={setSelectedTask}
+          onMoveTask={board.moveTask}
         />
 
         <FinalApproachModal

@@ -4,6 +4,7 @@
 // - lanes as rows (domains)
 // - each cell contains tasks filtered by lane + column
 
+import { useState } from "react";
 import { Column, Lane, Task } from "@/types";
 import LaneRow from "./LaneRow";
 
@@ -17,6 +18,7 @@ type Props = {
   onToggleToday: (taskId: string) => void;
   onDelete: (taskId: string) => void;
   onOpenFinalApproach: (task: Task) => void;
+  onMoveTask: (taskId: string, laneId: string, columnId: string) => void;
 };
 
 export default function Board({
@@ -29,7 +31,22 @@ export default function Board({
   onToggleToday,
   onDelete,
   onOpenFinalApproach,
+  onMoveTask,
 }: Props) {
+  const [collapsedLanes, setCollapsedLanes] = useState<Set<string>>(new Set());
+
+  const toggleLane = (laneId: string) => {
+    setCollapsedLanes((prev) => {
+      const next = new Set(prev);
+      if (next.has(laneId)) {
+        next.delete(laneId);
+      } else {
+        next.add(laneId);
+      }
+      return next;
+    });
+  };
+
   return (
     <section className="panel">
       <div className="board-grid border-b pb-3">
@@ -49,11 +66,14 @@ export default function Board({
             columns={columns}
             tasks={tasks}
             todayTaskIds={todayTaskIds}
+            isCollapsed={collapsedLanes.has(lane.id)}
+            onToggleCollapse={() => toggleLane(lane.id)}
             onMoveLeft={onMoveLeft}
             onMoveRight={onMoveRight}
             onToggleToday={onToggleToday}
             onDelete={onDelete}
             onOpenFinalApproach={onOpenFinalApproach}
+            onMoveTask={onMoveTask}
           />
         ))}
       </div>

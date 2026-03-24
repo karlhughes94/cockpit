@@ -23,7 +23,14 @@ export default function TaskCard({
   const completed = checklist.filter((item) => item.done).length;
 
   return (
-    <div className="task-card fade-in">
+    <div
+      className="task-card fade-in"
+      draggable
+      onDragStart={(e) => {
+        e.dataTransfer.setData("text/plain", task.id);
+        e.dataTransfer.effectAllowed = "move";
+      }}
+    >
       <p className="task-title">{task.title}</p>
 
       {task.notes ? (
